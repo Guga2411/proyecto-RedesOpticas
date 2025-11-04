@@ -58,7 +58,8 @@ Este comando instalará los siguientes paquetes:
 - **geopandas** (1.1.1): Para manejo de datos geoespaciales
 - **shapely** (2.1.2): Para operaciones geométricas
 - **pulp** (3.3.0): Para resolver problemas de optimización lineal
-- **matplotlib** (3.10.7): Para visualización
+- **matplotlib** (3.10.7): Para visualización estática
+- **folium**: Para mapas interactivos
 - **scikit-learn** (1.7.2): Para clustering (K-Means)
 - **pandas** (2.3.3): Para manipulación de datos
 - **numpy** (2.3.4): Para operaciones numéricas
@@ -140,7 +141,9 @@ Importa todas las librerías necesarias y configura parámetros globales como:
 - Verifica latencia de propagación
 
 ### 7. Visualización
-- Genera mapa con fibra instalada y ubicación de splitters
+- Mapa estático (matplotlib): vista general del despliegue
+- Mapa interactivo (folium): exploración detallada con tooltips y capas
+- Métricas finales: utilización, costos y presupuesto óptico
 
 ## Parámetros Configurables
 
