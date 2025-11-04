@@ -1,6 +1,8 @@
 .ipynb_checkpoints/
 .cache/
 .wdm/
+.wdm_new/
 __pycache__/
 cache/
 wdm/
+wdm_new/
