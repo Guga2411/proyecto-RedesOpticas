@@ -1,7 +1,10 @@
 # Desafío 3: Optimización de Despliegue PON
 
 ## Descripción
-Este proyecto implementa un sistema de optimización para el despliegue de redes PON (Passive Optical Networks) utilizando programación lineal entera (ILP) con datos topológicos reales de OpenStreetMap.
+Este proyecto implementa un sistema de optimización para el despliegue de redes PON (Passive Optical Networks) utilizando:
+- **Distancia Manhattan** para rutas realistas siguiendo la red vial
+- **Power Budget** como restricción de calidad en el modelo ILP
+- **Programación Lineal Entera (ILP)** con datos topológicos reales de OpenStreetMap
 
 **Integrantes:**
 - Camila Herrera
@@ -89,13 +92,14 @@ Una vez configurado el entorno:
 1. Abre `Desafio3.ipynb` en VS Code
 2. Verifica que el kernel seleccionado sea `wdm_new (Python 3.13.3)`
 3. Ejecuta las celdas en orden secuencial:
-   - **Celda 1:** Importar librerías y configurar parámetros
-   - **Celda 2:** Extraer topología de OpenStreetMap
-   - **Celda 3:** Precomputar rutas entre candidatos y usuarios
-   - **Celda 4:** Poda y filtrado del modelo
-   - **Celda 5:** Formulación y resolución del ILP
-   - **Celda 6:** Verificación de presupuesto óptico y latencia
-   - **Celda 7:** Visualización de resultados
+   - **Sección 1:** Importar librerías y parámetros (incluyendo Power Budget)
+   - **Sección 2:** Extraer topología de OpenStreetMap
+   - **Sección 3:** Calcular rutas con distancia Manhattan
+   - **Sección 4:** Calcular Power Budget para validación
+   - **Sección 5:** Formulación y resolución del ILP con restricciones de Power Budget
+   - **Sección 6:** Validación final de presupuesto óptico y latencia
+   - **Sección 7:** Visualización de resultados (estática e interactiva)
+   - **Sección 8:** Conclusiones y análisis
 
 ## Estructura del Proyecto
 
@@ -112,52 +116,71 @@ proyecto-RedesOpticas/
 ## Descripción de las Secciones del Notebook
 
 ### 1. Preparación: Instalación e Imports
-Importa todas las librerías necesarias y configura parámetros globales como:
-- Costo de fibra por metro
-- Costo de splitters
-- Ratio de división (1:32)
-- Alcance máximo (RMAX)
+Importa todas las librerías necesarias y configura parámetros globales:
+- Costos de fibra y splitters
+- **Power Budget GPON**: potencia TX, sensibilidad RX, margen de sistema
+- Parámetros de atenuación física
+- Ratio de división y alcance máximo
 
 ### 2. Extracción Topológica
 - Descarga la red vial de Valparaíso, Chile usando OSMnx
 - Genera usuarios sintéticos en nodos de la red
-- Identifica candidatos para ubicación de splitters
+- Identifica candidatos para ubicación de splitters (intersecciones de alta conectividad)
 
-### 3. Precomputar Rutas
-- Calcula rutas óptimas entre todos los pares usuario-candidato
-- Almacena longitudes de caminos
+### 3. Cálculo de Rutas Manhattan
+- Calcula rutas óptimas usando **distancia Manhattan** (siguiendo calles reales)
+- Almacena longitudes y aristas de cada ruta
+- Proporciona distancias realistas para instalación de fibra
 
-### 4. Poda y Filtrado
-- Reduce el tamaño del problema para mejorar el rendimiento
-- Limita candidatos y pares usuario-splitter
+### 4. Cálculo de Power Budget
+- Evalúa pérdidas ópticas para cada ruta: fibra, splitter, conectores, empalmes
+- Valida factibilidad según presupuesto GPON (30 dB para clase B+)
+- Identifica rutas que cumplen requisitos de transmisión
 
-### 5. Formulación ILP
+### 5. Formulación ILP con Restricciones de Power Budget
 - Define variables de decisión (instalación de fibra, splitters, asignaciones)
-- Implementa restricciones (capacidad, conectividad, alcance)
-- Resuelve el problema de optimización
+- **Incorpora Power Budget como restricción del ILP** (no solo validación posterior)
+- Implementa restricciones de capacidad, conectividad y alcance
+- Resuelve el problema de optimización garantizando calidad óptica
 
-### 6. Verificación Física
-- Calcula presupuesto óptico (pérdidas en dB)
-- Verifica latencia de propagación
+### 6. Validación Física Final
+- Verifica que todas las asignaciones cumplen Power Budget
+- Calcula pérdidas ópticas y márgenes de sistema
+- Valida latencia de propagación
 
 ### 7. Visualización
 - Mapa estático (matplotlib): vista general del despliegue
-- Mapa interactivo (folium): exploración detallada con tooltips y capas
-- Métricas finales: utilización, costos y presupuesto óptico
+- Mapa interactivo (folium): exploración detallada con métricas de Power Budget
+- Usuarios coloreados según margen de Power Budget disponible
+- Métricas finales: utilización, costos y cumplimiento de estándares
 
 ## Parámetros Configurables
 
-Puedes ajustar los siguientes parámetros en la celda 1:
+Puedes ajustar los siguientes parámetros en la sección 1:
 
+**Modelo económico:**
 ```python
 COST_FIBER_PER_M = 1.0      # Costo por metro de fibra
 COST_SPLITTER = 200.0       # Costo por splitter
 SPLIT_RATIO = 32            # Ratio de división (1:32)
-RMAX = 10000.0              # Alcance máximo en metros
 ```
 
-En la celda 4 (poda):
+**Power Budget (GPON):**
+```python
+TX_POWER_DBM = 5.0          # Potencia transmitida (dBm)
+RX_SENSITIVITY_DBM = -28.0  # Sensibilidad receptor (dBm)
+SYSTEM_MARGIN_DB = 3.0      # Margen de sistema (dB)
+# Power Budget calculado: 30 dB
+```
 
+**Atenuación física:**
+```python
+FIBER_ATTEN_DB_PER_KM = 0.35
+CONNECTOR_LOSS_DB = 0.5
+RMAX = 20000.0              # Alcance máximo (metros)
+```
+
+En la sección 3.5 (poda):
 ```python
 MAX_CANDIDATES = 500        # Máximo de nodos candidatos
 K_NEAREST = 30             # Candidatos más cercanos por usuario
