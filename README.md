@@ -1,15 +1,29 @@
-# Desafío 3: Optimización de Despliegue PON
+# Proyecto: Optimización de Despliegue PON
 
 ## Descripción
 Este proyecto implementa un sistema de optimización para el despliegue de redes PON (Passive Optical Networks) utilizando:
 - **Distancia Manhattan** para rutas realistas siguiendo la red vial
-- **Power Budget** como restricción de calidad en el modelo ILP
-- **Programación Lineal Entera (ILP)** con datos topológicos reales de OpenStreetMap
+- **Clustering de usuarios** para posicionamiento óptimo de splitters
+- **Power Budget** como restricción de calidad con validación iterativa
+- **Programación Lineal Entera (ILP)** simplificada y eficiente
+- **Optimización con Numba** para procesamiento de grandes datasets
+- **Proceso iterativo** que garantiza cobertura completa de usuarios
 
 **Integrantes:**
 - Camila Herrera
 - Gustavo Venegas
 - Javier Cáceres
+
+## Archivos del Proyecto
+
+### Notebooks Principales:
+- **`Desafio3.ipynb`**: Primera iteración funcional del proyecto
+- **`Taller_4.ipynb`**: Segunda iteración mejorada (RECOMENDADO)
+
+### Documentación:
+- **`CAMBIOS_TALLER4.md`**: Detalle de modificaciones implementadas en Taller_4
+- **`COMPARACION_VERSIONES.md`**: Análisis comparativo entre ambas versiones
+- **`README.md`**: Este archivo (instrucciones de configuración y uso)
 
 ## Requisitos Previos
 - Python 3.13.3 o superior
@@ -66,12 +80,13 @@ Este comando instalará los siguientes paquetes:
 - **scikit-learn** (1.7.2): Para clustering (K-Means)
 - **pandas** (2.3.3): Para manipulación de datos
 - **numpy** (2.3.4): Para operaciones numéricas
+- **numba** (0.60+): Para optimización con JIT compilation
 - **jupyter** y **ipykernel**: Para ejecutar Jupyter Notebooks
 
 ### Paso 4: Seleccionar el Entorno en VS Code
 
 #### Opción A: Desde el Notebook
-1. Abre el archivo `Desafio3.ipynb` en VS Code
+1. Abre el archivo `Taller_4.ipynb` en VS Code
 2. Haz clic en el selector de kernel en la esquina superior derecha (donde dice "Select Kernel")
 3. Selecciona **"Python Environments..."**
 4. Elige el entorno `wdm_new` de la lista (debería aparecer como "Python 3.13.3 ('wdm_new')")
@@ -85,74 +100,100 @@ Este comando instalará los siguientes paquetes:
 1. Haz clic en la versión de Python mostrada en la barra de estado inferior
 2. Selecciona el intérprete de `wdm_new`
 
-## Ejecutar el Notebook
+## Uso del Proyecto
 
-Una vez configurado el entorno:
+### Opción Recomendada: Taller_4.ipynb
+
+1. Abre `Taller_4.ipynb` en VS Code
+2. Verifica que el kernel seleccionado sea `wdm_new (Python 3.13.3)`
+3. **Configurar área de estudio** en la celda de parámetros:
+   ```python
+   AREA_TYPE = 'urbana'  # Opciones: 'urbana', 'semi_urbana', 'rural'
+   ```
+4. Ejecuta todas las celdas en orden secuencial
+5. El proceso iterativo se ejecutará automáticamente
+6. Revisa resultados exportados en archivos CSV
+
+### Secciones del Notebook (Taller_4):
+1. Preparación (imports + Numba + parámetros)
+2. Selección de áreas (urbana/semi-urbana/rural)
+3. Generación de usuarios según densidad del área
+4. **Posicionamiento de splitters por clustering**
+5. Cálculo de rutas Manhattan (optimizado con Numba)
+6. Validación de Power Budget
+7. Preparación de datos para ILP
+8. Formulación del ILP simplificado
+9. **Bucle iterativo** (reposicionamiento automático)
+10. Validación final (métricas completas)
+11. Visualización (mapas estático e interactivo)
+12. Conclusiones y análisis
+13. Exportación de resultados
+
+### Alternativa: Desafio3.ipynb (Primera Iteración)
+
+Si deseas ver el enfoque original:
 
 1. Abre `Desafio3.ipynb` en VS Code
-2. Verifica que el kernel seleccionado sea `wdm_new (Python 3.13.3)`
-3. Ejecuta las celdas en orden secuencial:
-   - **Sección 1:** Importar librerías y parámetros (incluyendo Power Budget)
-   - **Sección 2:** Extraer topología de OpenStreetMap
-   - **Sección 3:** Calcular rutas con distancia Manhattan
-   - **Sección 4:** Calcular Power Budget para validación
-   - **Sección 5:** Formulación y resolución del ILP con restricciones de Power Budget
-   - **Sección 6:** Validación final de presupuesto óptico y latencia
-   - **Sección 7:** Visualización de resultados (estática e interactiva)
-   - **Sección 8:** Conclusiones y análisis
+2. Verifica el kernel `wdm_new`
+3. Ejecuta las celdas en orden secuencial
+
+**Nota:** Ver `COMPARACION_VERSIONES.md` para entender las diferencias entre ambas versiones.
 
 ## Estructura del Proyecto
 
 ```
 proyecto-RedesOpticas/
 │
-├── Desafio3.ipynb          # Notebook principal con el análisis
-├── requirements.txt         # Dependencias del proyecto
-├── README.md               # Este archivo
-├── wdm_new/                # Entorno virtual (no incluir en git)
-└── cache/                  # Cache de datos de OSMnx
+├── Desafio3.ipynb               # Primera iteración (funcional)
+├── Taller_4.ipynb               # Segunda iteración (RECOMENDADO)
+├── CAMBIOS_TALLER4.md           # Documentación de cambios
+├── COMPARACION_VERSIONES.md     # Análisis comparativo detallado
+├── requirements.txt             # Dependencias del proyecto
+├── README.md                    # Este archivo
+├── mapa_despliegue_pon.html     # Mapa interactivo generado
+├── resultados_*.csv             # Resultados exportados
+├── asignaciones_*.csv           # Detalles de asignaciones
+├── wdm_new/                     # Entorno virtual (no incluir en git)
+└── cache/                       # Cache de datos de OSMnx
 ```
 
-## Descripción de las Secciones del Notebook
+## Características Principales de Taller_4.ipynb
 
-### 1. Preparación: Instalación e Imports
-Importa todas las librerías necesarias y configura parámetros globales:
-- Costos de fibra y splitters
-- **Power Budget GPON**: potencia TX, sensibilidad RX, margen de sistema
-- Parámetros de atenuación física
-- Ratio de división y alcance máximo
+### 1. Áreas de Estudio Específicas
+- **Urbana**: Centro denso, 500m radio, ~100 usuarios
+- **Semi-Urbana**: Residencial, 800m radio, ~60 usuarios  
+- **Rural**: Baja densidad, 1200m radio, ~30 usuarios
 
-### 2. Extracción Topológica
-- Descarga la red vial de Valparaíso, Chile usando OSMnx
-- Genera usuarios sintéticos en nodos de la red
-- Identifica candidatos para ubicación de splitters (intersecciones de alta conectividad)
+### 2. Posicionamiento Inteligente de Splitters
+- Clustering K-Means de usuarios
+- Splitters ubicados cerca de centroides
+- Adaptación automática al número de usuarios
 
-### 3. Cálculo de Rutas Manhattan
-- Calcula rutas óptimas usando **distancia Manhattan** (siguiendo calles reales)
-- Almacena longitudes y aristas de cada ruta
-- Proporciona distancias realistas para instalación de fibra
+### 3. Optimización con Numba
+- Funciones críticas con `@jit(nopython=True)`
+- 10-100x más rápido que enfoque original
+- Escalabilidad hasta 1000 usuarios
 
-### 4. Cálculo de Power Budget
-- Evalúa pérdidas ópticas para cada ruta: fibra, splitter, conectores, empalmes
-- Valida factibilidad según presupuesto GPON (30 dB para clase B+)
-- Identifica rutas que cumplen requisitos de transmisión
+### 4. Proceso Iterativo
+- Garantiza cobertura completa de usuarios
+- Reposicionamiento automático de splitters
+- Hasta 5 iteraciones (configurable)
 
-### 5. Formulación ILP con Restricciones de Power Budget
-- Define variables de decisión (instalación de fibra, splitters, asignaciones)
-- **Incorpora Power Budget como restricción del ILP** (no solo validación posterior)
-- Implementa restricciones de capacidad, conectividad y alcance
-- Resuelve el problema de optimización garantizando calidad óptica
+### 5. ILP Simplificado
+- Solo decide asignaciones (splitters pre-posicionados)
+- Variables reducidas → Resolución 20-30x más rápida
+- Power Budget como pre-validación
 
-### 6. Validación Física Final
-- Verifica que todas las asignaciones cumplen Power Budget
-- Calcula pérdidas ópticas y márgenes de sistema
-- Valida latencia de propagación
+### 6. Validación Completa
+- Power Budget por usuario
+- Latencia de propagación
+- Utilización de splitters
+- Métricas de cobertura
 
-### 7. Visualización
-- Mapa estático (matplotlib): vista general del despliegue
-- Mapa interactivo (folium): exploración detallada con métricas de Power Budget
-- Usuarios coloreados según margen de Power Budget disponible
-- Métricas finales: utilización, costos y cumplimiento de estándares
+### 7. Exportación de Resultados
+- CSV con resumen general
+- CSV con detalles por usuario
+- Mapa interactivo HTML
 
 ## Parámetros Configurables
 

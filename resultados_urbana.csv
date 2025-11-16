@@ -1,0 +1,2 @@
+area_type,num_users,num_splitters,num_assignments,coverage_pct,total_cost,iterations,power_budget_db,split_ratio
+urbana,100,4,96,96.0,8455.51730705124,0,30.0,32
