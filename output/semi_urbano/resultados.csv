@@ -1,2 +1,2 @@
 escenario,descripcion,num_usuarios,num_splitters,cobertura_pct,fibra_total_m,costo_total,perdida_promedio_db,perdida_maxima_db,latencia_promedio_us,iteraciones
-semi_urbana,Zona semi-urbana - Viña del Mar,60,3,95.0,13766.563452584132,14366.563452584132,19.06383796371844,19.83055791030971,6.132051098751244,5
+semi_urbana,Zona semi-urbana - Viña del Mar,60,4,93.33333333333333,13310.796340611978,14110.796340611978,18.777789512358797,19.03195783272721,3.9985349220116624,5

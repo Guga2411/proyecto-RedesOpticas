@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+<meta charset='utf-8'/>
+<title>Pipeline Urbano PON</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; background:#f5f6f8; margin:0; padding:0; }
+.pipeline-wrapper { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.pipeline-header { text-align:center; margin-bottom: 18px; }
+.pipeline-header h2 { margin: 0; color:#212529; }
+.pipeline-nav { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.pipeline-nav label { flex:1; min-width:150px; padding:10px; background:#ffffff; border:1px solid #ced4da; border-radius:8px; text-align:center; cursor:pointer; transition:all 0.2s ease; font-weight:600; color:#495057; }
+.pipeline-nav input { display:none; }
+.pipeline-nav input:checked + label { border-color:#0d6efd; color:#0d6efd; box-shadow:0 0 0 2px rgba(13,110,253,0.15); }
+.stage-content { display:none; background:#ffffff; border-radius:12px; padding:18px; box-shadow:0 12px 30px rgba(15,23,42,0.08); animation: fade 0.35s ease-in-out; }
+.stage-content.active { display:block; }
+.stage-content h3 { margin-top:0; color:#212529; }
+.stage-content p { color:#495057; line-height:1.5; }
+.stage-frame { width:100%; height:480px; border:none; border-radius:8px; box-shadow:0 10px 20px rgba(15,23,42,0.12); }
+.stage-image { width:100%; border-radius:8px; box-shadow:0 10px 20px rgba(15,23,42,0.12); }
+@keyframes fade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+<div class='pipeline-wrapper'>
+  <div class='pipeline-header'>
+    <h2>Storyboard del Pipeline Urbano GPON</h2>
+    <p>Explora cada etapa del flujo: desde la extracción OSM hasta el despliegue optimizado.</p>
+  </div>
+  <div class='pipeline-nav'>
+    <input type='radio' id='stage1' name='stage' checked/><label for='stage1'>1. OSM Base</label>
+    <input type='radio' id='stage2' name='stage'/><label for='stage2'>2. Grafo Simplificado</label>
+    <input type='radio' id='stage3' name='stage'/><label for='stage3'>3. Usuarios y Clustering</label>
+    <input type='radio' id='stage4' name='stage'/><label for='stage4'>4. Rutas Manhattan</label>
+    <input type='radio' id='stage5' name='stage'/><label for='stage5'>5. ILP Conceptual</label>
+    <input type='radio' id='stage6' name='stage'/><label for='stage6'>6. Despliegue Final</label>
+  </div>
+  <div class='pipeline-content'>
+    <div class='stage-content' data-stage='stage1'>
+      <h3>1. Mapa base OSM crudo</h3>
+      <iframe class='stage-frame' src='pipeline_stage1_map_raw.html' loading='lazy'></iframe>
+      <p>Vista inicial sin simplificar del área urbana seleccionada, conservando la topología vial original para referencia.</p>
+    </div>
+    <div class='stage-content' data-stage='stage2'>
+      <h3>2. Grafo vial simplificado</h3>
+      <iframe class='stage-frame' src='pipeline_stage2_map_graph.html' loading='lazy'></iframe>
+      <p>Tras la simplificación con OSMnx se obtiene el grafo dirigido utilizable por el pipeline de optimización.</p>
+    </div>
+    <div class='stage-content' data-stage='stage3'>
+      <h3>3. Usuarios y splitters propuestos</h3>
+      <iframe class='stage-frame' src='pipeline_stage3_users_clusters.html' loading='lazy'></iframe>
+      <p>Usuarios sintéticos agrupados por K-Means y posición de splitters sobre nodos reales de la red.</p>
+    </div>
+    <div class='stage-content' data-stage='stage4'>
+      <h3>4. Rutas Manhattan representativas</h3>
+      <iframe class='stage-frame' src='pipeline_stage4_routes.html' loading='lazy'></iframe>
+      <p>Subset de rutas Manhattan calculadas entre usuarios y sus splitters, previo al filtrado por Power Budget.</p>
+    </div>
+    <div class='stage-content' data-stage='stage5'>
+      <h3>5. Diagrama conceptual del ILP</h3>
+      <img class='stage-image' src='pipeline_stage5_ilp_diagram.png' alt='Diagrama conceptual del ILP'/>
+      <p>Resumen visual de las decisiones binaria del ILP: asignaciones, activación de aristas y despliegue final.</p>
+    </div>
+    <div class='stage-content' data-stage='stage6'>
+      <h3>6. Despliegue final optimizado</h3>
+      <iframe class='stage-frame' src='../mapa_despliegue_pon.html' loading='lazy'></iframe>
+      <p>Resultado consolidado del pipeline original con splitters activados, fibras seleccionadas y usuarios cubiertos.</p>
+    </div>
+  </div>
+</div>
+<script>
+const radios = document.querySelectorAll('.pipeline-nav input[type='radio']');
+const stages = document.querySelectorAll('.stage-content');
+function updateStages() {
+  const active = document.querySelector('.pipeline-nav input[type='radio']:checked').id;
+  stages.forEach(stage => {
+    stage.classList.toggle('active', stage.dataset.stage === active);
+  });
+}
+radios.forEach(radio => radio.addEventListener('change', updateStages));
+updateStages();
+</script>
+</body>
+</html>

@@ -3,15 +3,15 @@ Escenario,urbana,semi_urbana,rural
 Descripción,Zona urbana densa - Centro Valparaíso,Zona semi-urbana - Viña del Mar,Zona rural - Quilpué
 Radio de área (m),500,800,1200
 Usuarios objetivo,100,60,30
-Splitters instalados,8,3,1
-Cobertura lograda (%),94.0,91.7,100.0
-Fibra total (m),7228.6,13112.2,14679.1
-Costo total,8828.64,13712.25,14879.13
-Costo por usuario,88.29,228.54,495.97
-Fibra por usuario (m),72.3,218.5,489.3
-Usuarios/Splitter,12.5,20.0,30.0
-Pérdida promedio (dB),18.67,18.86,18.97
-Pérdida máxima (dB),18.95,19.22,19.37
-Margen Power Budget (dB),11.05,10.78,10.63
-Latencia promedio (µs),1.87,3.93,5.10
+Splitters instalados,7,4,1
+Cobertura lograda (%),96.0,93.3,100.0
+Fibra total (m),6805.8,13310.8,15831.5
+Costo total,8205.78,14110.80,16031.49
+Costo por usuario,82.06,235.18,534.38
+Fibra por usuario (m),68.1,221.8,527.7
+Usuarios/Splitter,14.3,15.0,30.0
+Pérdida promedio (dB),18.60,18.78,18.90
+Pérdida máxima (dB),18.76,19.03,19.31
+Margen Power Budget (dB),11.24,10.97,10.69
+Latencia promedio (µs),1.37,4.00,5.72
 Iteraciones ILP,5,5,0
