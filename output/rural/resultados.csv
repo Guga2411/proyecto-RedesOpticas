@@ -1,0 +1,2 @@
+escenario,descripcion,num_usuarios,num_splitters,cobertura_pct,fibra_total_m,costo_total,perdida_promedio_db,perdida_maxima_db,latencia_promedio_us,iteraciones
+rural,Zona rural - Quilpué,30,1,100.0,17793.009886301217,17993.009886301217,19.025982459147208,19.516569800026556,5.720351455703192,0
